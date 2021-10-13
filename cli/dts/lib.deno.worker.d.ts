@@ -3,7 +3,6 @@
 /// <reference no-default-lib="true" />
 /// <reference lib="deno.ns" />
 /// <reference lib="deno.shared_globals" />
-/// <reference lib="deno.webgpu" />
 /// <reference lib="esnext" />
 
 declare class WorkerGlobalScope {
@@ -38,7 +37,6 @@ declare class WorkerGlobalScope {
 
 declare class WorkerNavigator {
   constructor();
-  readonly gpu: GPU;
 }
 
 declare var navigator: WorkerNavigator;

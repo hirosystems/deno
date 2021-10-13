@@ -1,9 +1,9 @@
 // Copyright 2018-2021 the Deno authors. All rights reserved. MIT license.
 
-mod ast;
+pub mod ast;
 mod auth_tokens;
 mod checksum;
-mod colors;
+pub mod colors;
 mod config_file;
 mod deno_dir;
 mod diagnostics;
@@ -11,43 +11,42 @@ mod diff;
 mod disk_cache;
 mod errors;
 mod file_fetcher;
-mod file_watcher;
+pub mod file_watcher;
 mod flags;
 mod flags_allow_net;
 mod fmt_errors;
-mod fs_util;
+pub mod fs_util;
 mod http_cache;
 mod http_util;
 mod import_map;
 mod info;
 mod lockfile;
 mod logger;
-mod lsp;
 mod media_type;
-mod module_graph;
+pub mod module_graph;
 mod module_loader;
 mod ops;
 mod program_state;
 mod source_maps;
-mod specifier_handler;
+pub mod specifier_handler;
 mod standalone;
 mod text_encoding;
-mod tokio_util;
-mod tools;
-mod tsc;
+pub mod tokio_util;
+pub mod tools;
+pub mod tsc;
 mod unix_util;
 mod version;
 
-use crate::file_fetcher::File;
+pub use crate::file_fetcher::File;
 use crate::file_watcher::ResolutionResult;
 use crate::flags::DenoSubcommand;
-use crate::flags::Flags;
+pub use crate::flags::Flags;
 use crate::fmt_errors::PrettyJsError;
-use crate::media_type::MediaType;
+pub use crate::media_type::MediaType;
 use crate::module_graph::GraphBuilder;
 use crate::module_graph::Module;
 use crate::module_loader::CliModuleLoader;
-use crate::program_state::ProgramState;
+pub use crate::program_state::ProgramState;
 use crate::source_maps::apply_source_map;
 use crate::specifier_handler::FetchHandler;
 use crate::tools::installer::infer_name_from_url;
@@ -80,7 +79,7 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use tools::test_runner;
 
-fn create_web_worker_callback(
+pub fn create_web_worker_callback(
   program_state: Arc<ProgramState>,
 ) -> Arc<CreateWebWorkerCb> {
   Arc::new(move |args| {
@@ -166,7 +165,6 @@ pub fn create_main_worker(
   let module_loader = CliModuleLoader::new(program_state.clone());
 
   let global_state_ = program_state.clone();
-
   let js_error_create_fn = Rc::new(move |core_js_error| {
     let source_mapped_error =
       apply_source_map(&core_js_error, global_state_.clone());
@@ -185,10 +183,7 @@ pub fn create_main_worker(
   let options = WorkerOptions {
     apply_source_maps: true,
     args: program_state.flags.argv.clone(),
-    debug_flag: program_state
-      .flags
-      .log_level
-      .map_or(false, |l| l == log::Level::Debug),
+    debug_flag: false,
     unstable: program_state.flags.unstable,
     ca_data: program_state.ca_data.clone(),
     user_agent: version::get_user_agent(),
@@ -239,7 +234,6 @@ pub fn create_main_worker(
     js_runtime.sync_ops_cache();
   }
   worker.bootstrap(&options);
-
   worker
 }
 
@@ -275,8 +269,6 @@ fn print_cache_info(
   let deno_dir = &state.dir.root;
   let modules_cache = &state.file_fetcher.get_http_cache_location();
   let typescript_cache = &state.dir.gen_cache.location;
-  let registry_cache =
-    &state.dir.root.join(lsp::language_server::REGISTRIES_PATH);
   let mut origin_dir = state.dir.root.join("location_data");
 
   if let Some(location) = &location {
@@ -289,7 +281,6 @@ fn print_cache_info(
       "denoDir": deno_dir,
       "modulesCache": modules_cache,
       "typescriptCache": typescript_cache,
-      "registryCache": registry_cache,
       "originStorage": origin_dir,
     });
 
@@ -311,11 +302,6 @@ fn print_cache_info(
       colors::bold("Emitted modules cache:"),
       typescript_cache
     );
-    println!(
-      "{} {:?}",
-      colors::bold("Language server registries cache:"),
-      registry_cache,
-    );
     println!("{} {:?}", colors::bold("Origin storage:"), origin_dir);
     if location.is_some() {
       println!(
@@ -330,16 +316,14 @@ fn print_cache_info(
 
 pub fn get_types(unstable: bool) -> String {
   let mut types = format!(
-    "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}",
+    "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}",
     crate::tsc::DENO_NS_LIB,
     crate::tsc::DENO_CONSOLE_LIB,
     crate::tsc::DENO_URL_LIB,
     crate::tsc::DENO_WEB_LIB,
     crate::tsc::DENO_FILE_LIB,
     crate::tsc::DENO_FETCH_LIB,
-    crate::tsc::DENO_WEBGPU_LIB,
     crate::tsc::DENO_WEBSOCKET_LIB,
-    crate::tsc::DENO_WEBSTORAGE_LIB,
     crate::tsc::DENO_CRYPTO_LIB,
     crate::tsc::DENO_BROADCAST_CHANNEL_LIB,
     crate::tsc::SHARED_GLOBALS_LIB,
@@ -473,7 +457,7 @@ async fn install_command(
 }
 
 async fn lsp_command() -> Result<(), AnyError> {
-  lsp::start().await
+  Ok(())
 }
 
 async fn lint_command(

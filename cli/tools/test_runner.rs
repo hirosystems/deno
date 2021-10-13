@@ -62,7 +62,7 @@ pub struct TestEvent {
   pub message: TestMessage,
 }
 
-trait TestReporter {
+pub trait TestReporter {
   fn visit_event(&mut self, event: TestEvent);
   fn done(&mut self);
 }
@@ -103,19 +103,16 @@ impl TestReporter for PrettyTestReporter {
         filtered,
         only: _,
       } => {
-        if *pending == 1 {
-          println!("running {} test from {}", pending, event.origin);
-        } else {
-          println!("running {} tests from {}", pending, event.origin);
-        }
-
+        println!("Running {}", event.origin);
         self.pending += pending;
         self.filtered_out += filtered;
       }
 
       TestMessage::Wait { name } => {
         if !self.concurrent {
-          print!("test {} ...", name);
+          if name != "running script" {
+            print!("* {} ...", name);
+          }
         }
       }
 
@@ -127,7 +124,9 @@ impl TestReporter for PrettyTestReporter {
         self.pending -= 1;
 
         if self.concurrent {
-          print!("test {} ...", name);
+          if name != "running script" {
+            print!("* {} ...", name);
+          }
         }
 
         match result {
@@ -185,7 +184,14 @@ impl TestReporter for PrettyTestReporter {
       colors::green("ok").to_string()
     };
 
-    println!(
+    if (self.passed
+      + self.failed
+      + self.ignored
+      + self.filtered_out
+      + self.measured)
+      > 1
+    {
+      println!(
         "\ntest result: {}. {} passed; {} failed; {} ignored; {} measured; {} filtered out {}\n",
         status,
         self.passed,
@@ -195,14 +201,15 @@ impl TestReporter for PrettyTestReporter {
         self.filtered_out,
         colors::gray(format!("({}ms)", self.time.elapsed().as_millis())),
       );
+    }
   }
 }
 
-fn create_reporter(concurrent: bool) -> Box<dyn TestReporter + Send> {
+pub fn create_reporter(concurrent: bool) -> Box<dyn TestReporter + Send> {
   Box::new(PrettyTestReporter::new(concurrent))
 }
 
-pub(crate) fn is_supported(p: &Path) -> bool {
+pub fn is_supported(p: &Path) -> bool {
   use std::path::Component;
   if let Some(Component::Normal(basename_os_str)) = p.components().next_back() {
     let basename = basename_os_str.to_string_lossy();

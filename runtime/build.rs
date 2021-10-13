@@ -48,9 +48,7 @@ fn create_runtime_snapshot(snapshot_path: &Path, files: Vec<PathBuf>) {
       "".to_owned(),
       None,
     ),
-    deno_webstorage::init(None),
     deno_crypto::init(None),
-    deno_webgpu::init(false),
     deno_timers::init::<deno_timers::NoTimersPermission>(),
     deno_broadcast_channel::init(
       deno_broadcast_channel::InMemoryBroadcastChannel::default(),

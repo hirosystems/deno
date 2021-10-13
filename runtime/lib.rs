@@ -8,10 +8,8 @@ pub use deno_file;
 pub use deno_timers;
 pub use deno_url;
 pub use deno_web;
-pub use deno_webgpu;
 pub use deno_webidl;
 pub use deno_websocket;
-pub use deno_webstorage;
 
 pub mod colors;
 pub mod errors;

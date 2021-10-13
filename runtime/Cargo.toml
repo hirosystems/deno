@@ -27,10 +27,8 @@ deno_file = { version = "0.7.0", path = "../extensions/file" }
 deno_timers = { version = "0.6.0", path = "../extensions/timers" }
 deno_url = { version = "0.8.0", path = "../extensions/url" }
 deno_web = { version = "0.39.0", path = "../extensions/web" }
-deno_webgpu = { version = "0.9.0", path = "../extensions/webgpu" }
 deno_webidl = { version = "0.8.0", path = "../extensions/webidl" }
 deno_websocket = { version = "0.13.0", path = "../extensions/websocket" }
-deno_webstorage = { version = "0.3.0", path = "../extensions/webstorage" }
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1.11"
@@ -46,10 +44,8 @@ deno_file = { version = "0.7.0", path = "../extensions/file" }
 deno_timers = { version = "0.6.0", path = "../extensions/timers" }
 deno_url = { version = "0.8.0", path = "../extensions/url" }
 deno_web = { version = "0.39.0", path = "../extensions/web" }
-deno_webgpu = { version = "0.9.0", path = "../extensions/webgpu" }
 deno_webidl = { version = "0.8.0", path = "../extensions/webidl" }
 deno_websocket = { version = "0.13.0", path = "../extensions/websocket" }
-deno_webstorage = { version = "0.3.0", path = "../extensions/webstorage" }
 
 atty = "0.2.14"
 bytes = "1"
@@ -62,7 +58,7 @@ indexmap = "1.6.2"
 lazy_static = "1.4.0"
 libc = "0.2.93"
 log = "0.4.14"
-notify = "5.0.0-pre.7"
+notify = "=5.0.0-pre.7"
 percent-encoding = "2.1.0"
 regex = "1.4.3"
 ring = "0.16.20"
@@ -70,7 +66,7 @@ rustls = "0.19.0"
 serde = { version = "1.0.125", features = ["derive"] }
 sys-info = "0.9.0"
 termcolor = "1.1.2"
-tokio = { version = "1.6.1", features = ["full"] }
+tokio = { version = "=1.8.1", features = ["full"] }
 tokio-util = { version = "0.6", features = ["io"] }
 uuid = { version = "0.8.2", features = ["v4"] }
 webpki = "0.21.4"

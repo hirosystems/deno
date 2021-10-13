@@ -28,9 +28,7 @@ delete Object.prototype.__proto__;
   const headers = window.__bootstrap.headers;
   const streams = window.__bootstrap.streams;
   const fileReader = window.__bootstrap.fileReader;
-  const webgpu = window.__bootstrap.webgpu;
   const webSocket = window.__bootstrap.webSocket;
-  const webStorage = window.__bootstrap.webStorage;
   const broadcastChannel = window.__bootstrap.broadcastChannel;
   const file = window.__bootstrap.file;
   const formData = window.__bootstrap.formData;
@@ -82,7 +80,12 @@ delete Object.prototype.__proto__;
   }
 
   let isClosing = false;
+  let globalDispatchEvent;
+
   async function pollForMessages() {
+    if (!globalDispatchEvent) {
+      globalDispatchEvent = globalThis.dispatchEvent.bind(globalThis);
+    }
     while (!isClosing) {
       const bufferMsg = await core.opAsync("op_worker_get_message");
       const data = core.deserialize(bufferMsg);
@@ -96,7 +99,7 @@ delete Object.prototype.__proto__;
         if (globalThis.onmessage) {
           await globalThis.onmessage(msgEvent);
         }
-        globalThis.dispatchEvent(msgEvent);
+        globalDispatchEvent(msgEvent);
       } catch (e) {
         let handled = false;
 
@@ -120,7 +123,7 @@ delete Object.prototype.__proto__;
           handled = ret === true;
         }
 
-        globalThis.dispatchEvent(errorEvent);
+        globalDispatchEvent(errorEvent);
         if (errorEvent.defaultPrevented) {
           handled = true;
         }
@@ -220,17 +223,6 @@ delete Object.prototype.__proto__;
 
   const navigator = webidl.createBranded(Navigator);
 
-  Object.defineProperties(Navigator.prototype, {
-    gpu: {
-      configurable: true,
-      enumerable: true,
-      get() {
-        webidl.assertBranded(this, Navigator);
-        return webgpu.gpu;
-      },
-    },
-  });
-
   class WorkerNavigator {
     constructor() {
       webidl.illegalConstructor();
@@ -243,16 +235,6 @@ delete Object.prototype.__proto__;
 
   const workerNavigator = webidl.createBranded(WorkerNavigator);
 
-  Object.defineProperties(WorkerNavigator.prototype, {
-    gpu: {
-      configurable: true,
-      enumerable: true,
-      get() {
-        webidl.assertBranded(this, WorkerNavigator);
-        return webgpu.gpu;
-      },
-    },
-  });
 
   // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope
   const windowOrWorkerGlobalScope = {
@@ -319,37 +301,6 @@ delete Object.prototype.__proto__;
     performance: util.writable(performance.performance),
     setInterval: util.writable(timers.setInterval),
     setTimeout: util.writable(timers.setTimeout),
-
-    GPU: util.nonEnumerable(webgpu.GPU),
-    GPUAdapter: util.nonEnumerable(webgpu.GPUAdapter),
-    GPUAdapterLimits: util.nonEnumerable(webgpu.GPUAdapterLimits),
-    GPUSupportedFeatures: util.nonEnumerable(webgpu.GPUSupportedFeatures),
-    GPUDevice: util.nonEnumerable(webgpu.GPUDevice),
-    GPUQueue: util.nonEnumerable(webgpu.GPUQueue),
-    GPUBuffer: util.nonEnumerable(webgpu.GPUBuffer),
-    GPUBufferUsage: util.nonEnumerable(webgpu.GPUBufferUsage),
-    GPUMapMode: util.nonEnumerable(webgpu.GPUMapMode),
-    GPUTexture: util.nonEnumerable(webgpu.GPUTexture),
-    GPUTextureUsage: util.nonEnumerable(webgpu.GPUTextureUsage),
-    GPUTextureView: util.nonEnumerable(webgpu.GPUTextureView),
-    GPUSampler: util.nonEnumerable(webgpu.GPUSampler),
-    GPUBindGroupLayout: util.nonEnumerable(webgpu.GPUBindGroupLayout),
-    GPUPipelineLayout: util.nonEnumerable(webgpu.GPUPipelineLayout),
-    GPUBindGroup: util.nonEnumerable(webgpu.GPUBindGroup),
-    GPUShaderModule: util.nonEnumerable(webgpu.GPUShaderModule),
-    GPUShaderStage: util.nonEnumerable(webgpu.GPUShaderStage),
-    GPUComputePipeline: util.nonEnumerable(webgpu.GPUComputePipeline),
-    GPURenderPipeline: util.nonEnumerable(webgpu.GPURenderPipeline),
-    GPUColorWrite: util.nonEnumerable(webgpu.GPUColorWrite),
-    GPUCommandEncoder: util.nonEnumerable(webgpu.GPUCommandEncoder),
-    GPURenderPassEncoder: util.nonEnumerable(webgpu.GPURenderPassEncoder),
-    GPUComputePassEncoder: util.nonEnumerable(webgpu.GPUComputePassEncoder),
-    GPUCommandBuffer: util.nonEnumerable(webgpu.GPUCommandBuffer),
-    GPURenderBundleEncoder: util.nonEnumerable(webgpu.GPURenderBundleEncoder),
-    GPURenderBundle: util.nonEnumerable(webgpu.GPURenderBundle),
-    GPUQuerySet: util.nonEnumerable(webgpu.GPUQuerySet),
-    GPUOutOfMemoryError: util.nonEnumerable(webgpu.GPUOutOfMemoryError),
-    GPUValidationError: util.nonEnumerable(webgpu.GPUValidationError),
   };
 
   // The console seems to be the only one that should be writable and non-enumerable
@@ -378,17 +329,6 @@ delete Object.prototype.__proto__;
     alert: util.writable(prompt.alert),
     confirm: util.writable(prompt.confirm),
     prompt: util.writable(prompt.prompt),
-    localStorage: {
-      configurable: true,
-      enumerable: true,
-      get: webStorage.localStorage,
-    },
-    sessionStorage: {
-      configurable: true,
-      enumerable: true,
-      get: webStorage.sessionStorage,
-    },
-    Storage: util.nonEnumerable(webStorage.Storage),
   };
 
   const workerRuntimeGlobalProperties = {

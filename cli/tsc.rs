@@ -35,11 +35,8 @@ pub static DENO_URL_LIB: &str = include_str!(env!("DENO_URL_LIB_PATH"));
 pub static DENO_WEB_LIB: &str = include_str!(env!("DENO_WEB_LIB_PATH"));
 pub static DENO_FILE_LIB: &str = include_str!(env!("DENO_FILE_LIB_PATH"));
 pub static DENO_FETCH_LIB: &str = include_str!(env!("DENO_FETCH_LIB_PATH"));
-pub static DENO_WEBGPU_LIB: &str = include_str!(env!("DENO_WEBGPU_LIB_PATH"));
 pub static DENO_WEBSOCKET_LIB: &str =
   include_str!(env!("DENO_WEBSOCKET_LIB_PATH"));
-pub static DENO_WEBSTORAGE_LIB: &str =
-  include_str!(env!("DENO_WEBSTORAGE_LIB_PATH"));
 pub static DENO_CRYPTO_LIB: &str = include_str!(env!("DENO_CRYPTO_LIB_PATH"));
 pub static DENO_BROADCAST_CHANNEL_LIB: &str =
   include_str!(env!("DENO_BROADCAST_CHANNEL_LIB_PATH"));
@@ -199,7 +196,7 @@ pub struct Response {
 }
 
 #[derive(Debug)]
-struct State {
+pub struct State {
   data_url_map: HashMap<String, ModuleSpecifier>,
   hash_data: Vec<Vec<u8>>,
   emitted_files: Vec<EmittedFile>,
@@ -229,7 +226,7 @@ impl State {
   }
 }
 
-fn op<F>(op_fn: F) -> Box<OpFn>
+pub fn op<F>(op_fn: F) -> Box<OpFn>
 where
   F: Fn(&mut State, Value) -> Result<Value, AnyError> + 'static,
 {

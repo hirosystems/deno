@@ -106,13 +106,11 @@ impl MainWorker {
         options.user_agent.clone(),
         options.ca_data.clone(),
       ),
-      deno_webstorage::init(options.origin_storage_dir.clone()),
       deno_crypto::init(options.seed),
       deno_broadcast_channel::init(
         options.broadcast_channel.clone(),
         options.unstable,
       ),
-      deno_webgpu::init(options.unstable),
       deno_timers::init::<Permissions>(),
       // Metrics
       metrics::init(),

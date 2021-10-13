@@ -393,7 +393,7 @@ impl SourceMapGetter for ProgramState {
         // Do NOT use .lines(): it skips the terminating empty line.
         // (due to internally using .split_terminator() instead of .split())
         let lines: Vec<&str> = out.source.split('\n').collect();
-        assert!(lines.len() > line_number);
+        // assert!(lines.len() > line_number);
         lines[line_number].to_string()
       })
     } else {
