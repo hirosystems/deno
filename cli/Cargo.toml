@@ -29,7 +29,7 @@ deno_url = { version = "0.8.0", path = "../extensions/url" }
 deno_web = { version = "0.39.0", path = "../extensions/web" }
 deno_webidl = { version = "0.8.0", path = "../extensions/webidl" }
 deno_websocket = { version = "0.13.0", path = "../extensions/websocket" }
-regex = "1.4.3"
+regex = "1.5.5"
 serde = { version = "1.0.125", features = ["derive"] }
 
 [target.'cfg(windows)'.build-dependencies]
@@ -38,8 +38,8 @@ winres = "0.1.11"
 
 [dependencies]
 deno_core = { version = "0.89.0", path = "../core" }
-deno_doc = "0.5.0"
-deno_lint = "0.6.1"
+# deno_doc = "0.5.0"
+# deno_lint = "0.6.1"
 deno_runtime = { version = "0.16.0", path = "../runtime" }
 
 atty = "0.2.14"
@@ -65,7 +65,7 @@ notify = "5.0.0-pre.7"
 num_cpus = "1.13.0"
 percent-encoding = "2.1.0"
 pin-project = "1.0.6"
-regex = "1.4.3"
+regex = "1.5.5"
 ring = "0.16.20"
 rustyline = { version = "8.0.0", default-features = false }
 rustyline-derive = "0.4.0"
@@ -79,7 +79,7 @@ swc_ecmascript = { version = "0.36.0", features = ["codegen", "dep_graph", "pars
 tempfile = "3.2.0"
 termcolor = "1.1.2"
 text-size = "1.1.0"
-tokio = { version = "=1.15.0", features = ["full"] }
+tokio = { version = "=1.17.0", features = ["full"] }
 tokio-rustls = "0.22.0"
 uuid = { version = "0.8.2", features = ["v4", "serde"] }
 walkdir = "2.3.2"

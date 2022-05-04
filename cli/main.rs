@@ -467,12 +467,7 @@ async fn lint_command(
   ignore: Vec<PathBuf>,
   json: bool,
 ) -> Result<(), AnyError> {
-  if list_rules {
-    tools::lint::print_rules_list(json);
-    return Ok(());
-  }
-
-  tools::lint::lint_files(files, ignore, json).await
+  Ok(())
 }
 
 async fn cache_command(
@@ -724,7 +719,8 @@ async fn doc_command(
   maybe_filter: Option<String>,
   private: bool,
 ) -> Result<(), AnyError> {
-  tools::doc::print_docs(flags, source_file, json, maybe_filter, private).await
+  // tools::doc::print_docs(flags, source_file, json, maybe_filter, private).await
+  Ok(())
 }
 
 async fn format_command(
