@@ -49,6 +49,7 @@ type SpecifierMap = IndexMap<String, Option<Url>>;
 type ScopesMap = IndexMap<String, SpecifierMap>;
 
 #[derive(Debug, Clone, Serialize)]
+#[allow(dead_code)]
 pub struct ImportMap {
   #[serde(skip)]
   base_url: String,

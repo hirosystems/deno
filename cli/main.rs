@@ -462,10 +462,10 @@ async fn lsp_command() -> Result<(), AnyError> {
 
 async fn lint_command(
   _flags: Flags,
-  files: Vec<PathBuf>,
-  list_rules: bool,
-  ignore: Vec<PathBuf>,
-  json: bool,
+  _files: Vec<PathBuf>,
+  _list_rules: bool,
+  _ignore: Vec<PathBuf>,
+  _json: bool,
 ) -> Result<(), AnyError> {
   Ok(())
 }
@@ -713,11 +713,11 @@ async fn bundle_command(
 }
 
 async fn doc_command(
-  flags: Flags,
-  source_file: Option<String>,
-  json: bool,
-  maybe_filter: Option<String>,
-  private: bool,
+  _flags: Flags,
+  _source_file: Option<String>,
+  _json: bool,
+  _maybe_filter: Option<String>,
+  _private: bool,
 ) -> Result<(), AnyError> {
   // tools::doc::print_docs(flags, source_file, json, maybe_filter, private).await
   Ok(())

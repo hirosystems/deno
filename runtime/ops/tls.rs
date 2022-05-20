@@ -628,6 +628,7 @@ impl Shared {
     Self::drop_shared_waker(self_ptr);
   }
 
+  #[allow(unused_must_use)]
   fn wake_shared_waker_by_ref(self_ptr: *const ()) {
     let self_weak = unsafe { Weak::from_raw(self_ptr as *const Self) };
     if let Some(self_arc) = Weak::upgrade(&self_weak) {

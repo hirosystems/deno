@@ -507,6 +507,7 @@ mod internal {
   }
 
   #[derive(Debug)]
+  #[allow(dead_code)]
   enum NodeKind {
     /// In a chain of linked nodes, the "head" node is owned by the
     /// `CancelHandle`. A chain usually contains at most one head node; however
